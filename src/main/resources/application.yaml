@@ -1,11 +1,15 @@
 server:
   port: 8080
 
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET:super-secret-key-that-should-be-replaced-in-production}
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/transport_db
-    username: kinfe
-    password: transport123
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/transport_db}
+    username: ${SPRING_DATASOURCE_USERNAME:kinfe}
+    password: ${SPRING_DATASOURCE_PASSWORD:transport123}
 
   jpa:
     hibernate:
