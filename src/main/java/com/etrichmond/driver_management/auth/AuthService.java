@@ -1,9 +1,11 @@
 package com.etrichmond.driver_management.auth;
 
-import com.etrichmond.driver_management.common.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.etrichmond.driver_management.common.exception.ResourceNotFoundException;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -14,29 +16,74 @@ public class AuthService {
     private final JwtService jwtService;
 
     public UserResponse register(RegisterRequest request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("User already exists");
         }
 
         UserEntity user = new UserEntity();
+
         user.setName(request.getName());
+
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        user.setPassword(
+                passwordEncoder.encode(request.getPassword()));
+
         user.setRole(request.getRole());
 
+        user.setEnabled(true);
+
+        user.setMustChangePassword(false);
+
         UserEntity saved = userRepository.save(user);
-        return new UserResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole());
+
+        return toResponse(saved);
     }
 
     public AuthResponse login(LoginRequest request) {
-        UserEntity user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
+        UserEntity user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "User not found"));
+
+        if (!user.getEnabled()) {
+            throw new IllegalArgumentException(
+                    "User account is disabled");
         }
 
-        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
-        return new AuthResponse(token, new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole()));
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+            throw new IllegalArgumentException(
+                    "Invalid credentials");
+        }
+
+        String token = jwtService.generateToken(
+                user.getEmail(),
+                user.getRole().name());
+
+        return new AuthResponse(
+                token,
+                toResponse(user));
     }
+
+    public UserResponse getCurrentUser(String email) {
+
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Current user not found"));
+
+        return toResponse(user);
+    }
+
+    private UserResponse toResponse(UserEntity user) {
+
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole());
+    }
+
 }
