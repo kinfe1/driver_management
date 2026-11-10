@@ -1,13 +1,28 @@
 package com.etrichmond.driver_management.vehicle;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDate;
+
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class VehicleAssignmentResponse {
+
     private String id;
+
     private String driverId;
+
+    private String driverName;
+
     private String vehicleId;
-    private String assignmentDate;
+
+    private String plate;
+
+    private String type;
+
+    private String model;
+
+    private LocalDate assignedAt;
+
+    private String status;
+
 }

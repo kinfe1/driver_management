@@ -1,17 +1,19 @@
 package com.etrichmond.driver_management.vehicle;
 
-import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class VehicleAssignmentRequest {
 
-    @NotBlank
+    @NotNull
     private String driverId;
 
-    @NotBlank
+    @NotNull
     private String vehicleId;
 
-    @NotBlank
-    private String assignmentDate;
+    @NotNull
+    private LocalDate assignmentDate;
 }

@@ -1,8 +1,11 @@
 package com.etrichmond.driver_management.vehicle;
 
 import com.etrichmond.driver_management.common.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +23,15 @@ public class VehicleEntity extends BaseEntity {
     private String model;
 
     @Column(nullable = false)
+    private String manufacturer;
+
+    @Column(nullable = false)
     private String vehicleType;
+
+    @Column(nullable = false)
+    private Integer year;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VehicleStatus status = VehicleStatus.AVAILABLE;
 }
