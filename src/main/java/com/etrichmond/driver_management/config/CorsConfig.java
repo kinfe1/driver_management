@@ -17,7 +17,9 @@ public class CorsConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
 
                 configuration.setAllowedOrigins(List.of(
-                                "http://localhost:4200", "https://3836-69-250-93-176.ngrok-free.app"));
+                                "http://localhost:4200",
+                                "https://et-richmond.com",
+                                "https://www.et-richmond.com"));
 
                 configuration.setAllowedMethods(List.of(
                                 "GET",
