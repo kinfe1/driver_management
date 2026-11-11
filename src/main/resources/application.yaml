@@ -1,23 +1,24 @@
 server:
   port: 8080
+  address: 127.0.0.1
 
 app:
   jwt:
-    secret: ${APP_JWT_SECRET:super-secret-key-that-should-be-replaced-in-production}
+    secret: ${APP_JWT_SECRET}
 
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/transport_db}
-    username: ${SPRING_DATASOURCE_USERNAME:kinfe}
-    password: ${SPRING_DATASOURCE_PASSWORD:transport123}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
 
   servlet:
     multipart:

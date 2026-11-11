@@ -1,7 +1,8 @@
 package com.etrichmond.driver_management;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -56,7 +56,23 @@ class AuthenticationAndDriverFlowTest {
         JsonNode loginPayload = objectMapper.readTree(loginResponse);
         String token = loginPayload.path("data").path("token").asText();
 
-        String driverJson = "{\"firstName\":\"Ali\",\"lastName\":\"Bekele\",\"email\":\"driver@example.com\",\"phone\":\"+251911000000\",\"licenseNumber\":\"LIC-1001\",\"status\":\"ACTIVE\"}";
+        String driverJson = """
+                {
+                    "firstName":"Ali",
+                    "middleName":"K",
+                    "lastName":"Bekele",
+                    "email":"driver@example.com",
+                    "phone":"+251911000000",
+                    "secondaryPhone":"+251922000000",
+                    "address":"Addis Ababa",
+                    "employeeId":"EMP-1001",
+                    "branch":"Addis Main Branch",
+                    "driverType":"BUS",
+                    "licenseNumber":"LIC-1001",
+                    "licenseExpiry":"2027-12-31",
+                    "status":"ACTIVE"
+                }
+                """;
 
         mockMvc.perform(post("/api/drivers")
                 .header("Authorization", "Bearer " + token)
